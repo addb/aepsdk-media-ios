@@ -20,16 +20,11 @@ class ViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
 
-        guard let video = Bundle.main.path(forResource: "video", ofType: "mp4") else {
+
+        guard let videoUrl: URL = URL(string: "http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8") else {
+
             return
         }
-
-        let videoUrl = URL(fileURLWithPath: video)
-
-        //For live stream, include the url in below URL
-        /*guard let videoUrl: URL = URL(string: "") else {
-             return
-         }*/
 
         if videoPlayer == nil {
             videoPlayer = VideoPlayer()
