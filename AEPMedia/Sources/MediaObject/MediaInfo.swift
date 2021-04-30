@@ -36,7 +36,7 @@ class MediaInfo: Equatable {
             lhs.granularAdTracking == rhs.granularAdTracking
     }
 
-    init?(id: String, name: String, streamType: String, mediaType: MediaType, length: Double, resumed: Bool = false, prerollWaitingTime: TimeInterval = TimeInterval(DEFAULT_PREROLL_WAITING_TIME_IN_MS), granularAdTracking: Bool = false) {
+    init?(id: String, name: String, streamType: String, mediaType: MediaType, length: Double, resumed: Bool = false, prerollWaitingTime: Int = DEFAULT_PREROLL_WAITING_TIME_IN_MS, granularAdTracking: Bool = false) {
 
         guard !id.isEmpty else {
             Log.debug(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Error creating MediaInfo, id must not be Empty")
@@ -64,7 +64,7 @@ class MediaInfo: Equatable {
         self.mediaType = mediaType
         self.length = length
         self.resumed = resumed
-        self.prerollWaitingTime = Int(prerollWaitingTime)
+        self.prerollWaitingTime = prerollWaitingTime
         self.granularAdTracking = granularAdTracking
     }
 
@@ -105,9 +105,9 @@ class MediaInfo: Equatable {
 
         let resumed = info?[MediaConstants.MediaInfo.RESUMED] as? Bool ?? false
 
-        let prerollWaitTimeVal: Int = info?[MediaConstants.MediaInfo.PREROLL_TRACKING_WAITING_TIME] as? Int ?? Int(Self.DEFAULT_PREROLL_WAITING_TIME_IN_MS)
+        let prerollWaitTimeVal: Int = info?[MediaConstants.MediaInfo.PREROLL_TRACKING_WAITING_TIME] as? Int ?? Self.DEFAULT_PREROLL_WAITING_TIME_IN_MS
 
-        let prerollWaitingTime: TimeInterval = TimeInterval(prerollWaitTimeVal)
+        let prerollWaitingTime: Int = prerollWaitTimeVal
 
         let granularAdTracking = info?[MediaConstants.MediaInfo.GRANULAR_AD_TRACKING] as? Bool ?? false
 

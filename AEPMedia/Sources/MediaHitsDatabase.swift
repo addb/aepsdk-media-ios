@@ -34,11 +34,11 @@ class MediaHitsDatabase {
         self.databaseFilePath = databaseFilePath
         self.serialQueue = DispatchQueue.init(label: databaseName)
         guard createTableIfNotExists(tableName: Self.TABLE_NAME) else {
-            Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>], Failed to initialize MediaHitsDatabase with database name '\(databaseName)'.")
+            Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Failed to initialize MediaHitsDatabase with database name: (\(databaseName)).")
             return nil
         }
     }
-
+   
     /// Adds a `Data` object representing a `MediaHit` to the `MediaHitsDatabase`.
     /// - Parameters:
     ///   - sessionId: a `String` containing the session id of the `MediaHit`
@@ -79,7 +79,7 @@ class MediaHitsDatabase {
                 disconnect(database: connection)
             }
             guard let result = SQLiteWrapper.query(database: connection, sql: queryRowStatement) else {
-                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Query returned no records: \(queryRowStatement).")
+                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Query returned no records: (\(queryRowStatement)).")
                 return nil
             }
 
@@ -107,7 +107,7 @@ class MediaHitsDatabase {
             DELETE FROM \(Self.TABLE_NAME) WHERE sessionId='\(sessionId)';
             """
             guard SQLiteWrapper.execute(database: connection, sql: deleteRowStatement) else {
-                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Failed to delete record for \(sessionId) from database: \(self.databaseName).")
+                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Failed to delete record for (\(sessionId)) from database: (\(self.databaseName)).")
                 return false
             }
             return true
@@ -128,7 +128,7 @@ class MediaHitsDatabase {
                 disconnect(database: connection)
             }
             guard SQLiteWrapper.execute(database: connection, sql: dropTableStatement) else {
-                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Failed to clear table '\(Self.TABLE_NAME)' in database: \(self.databaseName).")
+                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Failed to clear table: (\(Self.TABLE_NAME)) in database: (\(self.databaseName)).")
                 return false
             }
 
@@ -150,7 +150,7 @@ class MediaHitsDatabase {
                 disconnect(database: connection)
             }
             guard let result = SQLiteWrapper.query(database: connection, sql: queryRowStatement), let countAsString = result.first?.first?.value else {
-                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Query returned no records: \(queryRowStatement).")
+                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Query returned no records: (\(queryRowStatement)).")
                 return 0
             }
 
@@ -163,7 +163,7 @@ class MediaHitsDatabase {
     func getAllSessions() -> Set<String> {
         return serialQueue.sync {
             let queryRowStatement = """
-            SELECT sessionId FROM \(Self.TABLE_NAME);
+             SELECT sessionId FROM \(Self.TABLE_NAME);
             """
             guard let connection = connect() else {
                 return []
@@ -172,7 +172,7 @@ class MediaHitsDatabase {
                 disconnect(database: connection)
             }
             guard let results = SQLiteWrapper.query(database: connection, sql: queryRowStatement) else {
-                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Query returned no records: \(queryRowStatement).")
+                Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Query returned no records: (\(queryRowStatement)).")
                 return []
             }
 
@@ -193,7 +193,7 @@ class MediaHitsDatabase {
         if let database = SQLiteWrapper.connect(databaseFilePath: databaseFilePath, databaseName: databaseName) {
             return database
         }
-        Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Failed to connect to database: \(databaseName).")
+        Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Failed to connect to database: (\(databaseName)).")
         return nil
     }
 
@@ -225,11 +225,11 @@ class MediaHitsDatabase {
             """
 
             guard SQLiteWrapper.execute(database: connection, sql: createTableStatement) else {
-                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Failed to create table '\(tableName)'.")
+                Log.warning(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Failed to create table: (\(tableName)).")
                 return false
             }
 
-            Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Successfully created table '\(tableName)'.")
+            Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Successfully created table: (\(tableName)).")
             return true
         }
     }
@@ -239,7 +239,7 @@ class MediaHitsDatabase {
     /// - Returns: A `Data` object if the passed in row contains valid data
     private func dataFromSQLRow(row: [String: String]) -> Data? {
         guard let dataString = row[TB_KEY_DATA] else {
-            Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] Database record did not have valid data.")
+            Log.trace(label: Self.LOG_TAG, "[\(Self.CLASS_NAME)<\(#function)>] - Database record did not have valid data.")
             return nil
         }
 
